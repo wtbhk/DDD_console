@@ -31,7 +31,7 @@ class Download:
 
 	def download(self):
 		while True:
-			if self.stop_flag : break
+			if self.stop_flag or self.isEmpty() : break
 			url = ''
 			try:
 				url = self.queue.get(False)
@@ -39,7 +39,6 @@ class Download:
 				time.sleep(1)
 			try:
 				if url:
-					print threading.currentThread().getName()
 					if __name__ == '__main__' : print url
 					base_path = './DDD/' + re.search(r'(\w*)\.', url).group(1) + '/' + re.search(r'post\/.*\/(.*)', url).group(1) + '/'
 					#base_path = './DDD/blogger/id/'
@@ -58,7 +57,7 @@ class Download:
 						f = file(path, 'wb')
 						f.write(urllib.urlopen(i).read())
 						f.close()
-						self.callback(i + ' save to ' + path)
+						self.callback(str(threading.currentThread().getName()) + '|' + str(self.queue.qsize()) + '|' + path)
 			except:
 				pass
 		
